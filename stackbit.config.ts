@@ -19,11 +19,19 @@ export const config = defineStackbitConfig({
     ssgName: 'nextjs',
     nodeVersion: '18',
     styleObjectModelName: 'ThemeStyle',
+
     contentSources: [gitContentSource],
+
+    // ✅ Add Bynder as an asset source here
+    assetSources: [
+        { type: 'bynder' }
+    ],
+
     presetSource: {
         type: 'files',
         presetDirs: ['sources/local/presets']
     },
+
     siteMap: ({ documents, models }): SiteMapEntry[] => {
         const pageModels = models.filter((model) => model.type === 'page').map((model) => model.name);
         return documents
@@ -31,8 +39,6 @@ export const config = defineStackbitConfig({
             .map((document) => {
                 let slug = (document.fields.slug as DocumentStringLikeFieldNonLocalized)?.value;
                 if (!slug) return null;
-                /* Remove the leading slash in order to generate correct urlPath
-                regardless of whether the slug is '/', 'slug' or '/slug' */
                 slug = slug.replace(/^\/+/, '');
                 switch (document.modelName) {
                     case 'PostFeedLayout':
